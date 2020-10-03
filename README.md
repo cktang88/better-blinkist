@@ -1,2 +1,3 @@
 # better-blinkist
-better blinkist FE
+
+A better blinkist frontend optimized for desktop + easy reading.
