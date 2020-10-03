@@ -101,3 +101,14 @@ img {
   outline: solid 1px #ccc;
   max-width: 90%;
 }
+
+/* smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+/* table of contents */
+#toc {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+}

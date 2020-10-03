@@ -19,10 +19,21 @@ function refresh() {
   const processed = raw.slice(start, end);
   const node = toNode(processed);
   // fine processing
-  const reader = node.getElementsByClassName("reader__container")[0];
+  const reader = node.getElementsByClassName("reader__container__right")[0];
+  const headers = reader.getElementsByClassName("chapter chapter");
+
+  let tableOfContents = "<div id='toc'>";
+  for (let h of headers) {
+    h.id = h.getAttribute("data-chapterno");
+    const chapterTitle = h.getElementsByTagName("h1")[0].innerText;
+    tableOfContents += `<p><a href='#${h.id}'>${chapterTitle}</a></p>`;
+  }
+  tableOfContents += "</div>";
+
   out.innerHTML = reader
-    ? reader.innerHTML
+    ? tableOfContents + reader.innerHTML
     : "Invalid HTML. Please copy the full HTML from Blinkist.";
+
   // clear
   inbox.value = "";
 }
