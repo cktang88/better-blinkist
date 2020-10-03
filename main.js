@@ -1,41 +1,63 @@
 window.onload = () => {
   setInterval(refresh, 500);
 };
-const curPage = "";
+let currentHTML = "";
 function toNode(htmlRawString) {
   const doc = document.createElement("div");
   doc.innerHTML = htmlRawString;
   return doc;
 }
 
+const STORAGE_KEY = "better-blinkist";
+
+function addTOC(readerElem) {
+  const headers = readerElem.getElementsByClassName("chapter chapter");
+
+  const toc = document.getElementById("toc");
+  let tableOfContents = "";
+  for (let h of headers) {
+    h.id = h.getAttribute("data-chapterno");
+    const chapterTitle = h.getElementsByTagName("h1")[0].innerText;
+    tableOfContents += `<p><a href='#${h.id}'>${chapterTitle}</a></p>`;
+  }
+  toc.innerHTML = tableOfContents;
+}
+
 function refresh() {
   const out = document.getElementById("out");
   const inbox = document.getElementById("inbox");
-  if (!inbox.value.length) return;
+  // if input is blank, try to get from localstorage
+  const raw = inbox.value || localStorage.getItem(STORAGE_KEY);
+
+  if (!raw?.length) {
+    // skip render if empty input
+    console.log("empty");
+    return;
+  }
+  // clear input
+  inbox.value = "";
+  if (currentHTML === raw) {
+    // skip render if same input
+    console.log("same");
+    return;
+  }
+  currentHTML = raw;
+
   // rough processing
-  const raw = inbox.value;
   const start = raw.indexOf("<main");
   const end = raw.indexOf("</main>") + 7;
   const processed = raw.slice(start, end);
   const node = toNode(processed);
   // fine processing
   const reader = node.getElementsByClassName("reader__container__right")[0];
-  const headers = reader.getElementsByClassName("chapter chapter");
-
-  let tableOfContents = "<div id='toc'>";
-  for (let h of headers) {
-    h.id = h.getAttribute("data-chapterno");
-    const chapterTitle = h.getElementsByTagName("h1")[0].innerText;
-    tableOfContents += `<p><a href='#${h.id}'>${chapterTitle}</a></p>`;
+  if (!reader) {
+    out.innerHTML = "Invalid HTML. Please copy the full HTML from Blinkist.";
+    return;
   }
-  tableOfContents += "</div>";
+  addTOC(reader);
 
-  out.innerHTML = reader
-    ? tableOfContents + reader.innerHTML
-    : "Invalid HTML. Please copy the full HTML from Blinkist.";
-
-  // clear
-  inbox.value = "";
+  localStorage.setItem(STORAGE_KEY, currentHTML);
+  out.innerHTML = reader.innerHTML;
 }
 /*
 <div>hello</div>

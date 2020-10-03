@@ -111,6 +111,8 @@ html {
   position: fixed;
   left: 2em;
   top: 2em;
+  font-size: 0.9em;
+  max-width: 30em;
 }
 
 #github {
