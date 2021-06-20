@@ -59,6 +59,3 @@ function refresh() {
   localStorage.setItem(STORAGE_KEY, currentHTML);
   out.innerHTML = reader.innerHTML;
 }
-/*
-<div>hello</div>
-*/
