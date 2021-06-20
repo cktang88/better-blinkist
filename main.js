@@ -31,14 +31,14 @@ function refresh() {
 
   if (!raw?.length) {
     // skip render if empty input
-    console.log("empty");
+    // console.log("empty");
     return;
   }
   // clear input
   inbox.value = "";
   if (currentHTML === raw) {
     // skip render if same input
-    console.log("same");
+    // console.log("same");
     return;
   }
   currentHTML = raw;
